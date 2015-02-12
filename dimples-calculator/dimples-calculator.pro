@@ -25,3 +25,9 @@ SOURCES += main.cpp
 LIBS += -stdlib=libc++
 LIBS += -L/usr/local/lib \
         -lboost_regex
+
+HEADERS += \
+    node.h \
+    operations.h \
+    nodebuilder.h \
+    generator.h

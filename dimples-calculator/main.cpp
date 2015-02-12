@@ -1,91 +1,27 @@
 #include <QCoreApplication>
-#include <boost/regex.hpp>
 #include <string>
 #include <iostream>
-
-/*
-    Given a string representation of a math problem.
-    Recursively parse the string and calculate the answer.
-    Must be able to work with the following operators:
-    +       Addtion
-    -       Subtraction
-    x or *  Multiplication
-    /       Division (Obelus)
-    ^       Exponents
-            Square Root
-    ()      Parenthesis
-
-    Must follow the order of operations.
- */
+#include "nodebuilder.h"
 
 using namespace std;
 
-static const boost::regex operandRegex("^(\\-?)(\\d+)?(\\d|\\.)?(\\d)+");
-static const boost::regex operatorRegex("(\\+|\\-|\\(|\\)|\\/|\\*|\\^)");
-
-const std::string parsedOperand = "";
-const std::string parsedOperator = "";
-
-bool operandCheck(const string check){
-    if(boost::regex_match(check, operandRegex)){
-        return true;
-    }
-    else{
-        return false;
-    }
-}
-
-bool operatorCheck(const string check){
-    if(boost::regex_match(check, operatorRegex)){
-        return true;
-    }
-    else{
-        return false;
-    }
-}
-
-void calculate(int startIndex, int endIndex, string equation){
-    if(startIndex == endIndex)
-        return;
-
-    for(int i=startIndex; i<endIndex; i++){
-        string target;
-        target.push_back(equation[i]);
-
-        parsedOperand.append(target);
-
-        cout << tempOperand << endl;
-
-        if(operandCheck(tempOperand)){
-            // Is a valid number. Move on.
-            parsedOperand = tempOperand;
-            cout << "Operand" << parsedOperand << endl;
-        }
-        else if(operatorCheck(target)){
-            // operator found
-            parsedOperator = equation[i];
-            cout << "Operator" << parsedOperator << endl;
-        }
-        else{
-            throw "WTF!";
-            // unsupported charater found.
-            // Probably a letter or some shit.
-            // Can't do Algebra yet.
-        }
-    }
-}
-
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    try{
+        QCoreApplication a(argc, argv);
+        NodeBuilder* builder = new NodeBuilder();
+        builder->parse("123-456+789-333");
+        builder->print("      ");
 
-    std::string test = "(1+2)";
+        cout << endl << endl << "Done." << endl;
 
-    cout << "Parsing: " << test << endl;
-
-    calculate(0, test.length(), test);
-
-    return a.exec();
+        double answer = builder->solve();
+        cout << "Answer: " << answer << endl;
+        return a.exec();
+    }
+    catch(exception ex){
+        cout << "Exception: " <<  ex.what() << endl;
+    }
 }
 
 /*
