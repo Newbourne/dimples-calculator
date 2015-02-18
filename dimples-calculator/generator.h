@@ -1,22 +1,11 @@
-#include <time.h>
-#include <math.h>
-#include <string>
+#ifndef GENERATOR_H
+#define GENERATOR_H
 
-using namespace std;
+#include <string>
 
 class Generator {
 public:
-    static string operand(int operandMin, int operandMax){
-        srand (time(NULL));
-
-        int length = rand() % operandMax + operandMin;
-
-        char* operand = new char[length];
-
-        for(int i=0; i<length;i++){
-            operand[i] = rand() % 9;
-        }
-
-        return string(operand);
-    }
+    static std::string operand(int operandMin, int operandMax);
 };
+
+#endif

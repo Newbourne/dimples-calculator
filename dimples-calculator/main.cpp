@@ -1,7 +1,7 @@
 #include <QCoreApplication>
 #include <string>
 #include <iostream>
-#include "nodebuilder.h"
+#include "NodeBuilder.h"
 
 using namespace std;
 
@@ -10,13 +10,13 @@ int main(int argc, char *argv[])
     try{
         QCoreApplication a(argc, argv);
         NodeBuilder* builder = new NodeBuilder();
-        builder->parse("123-456+789-333");
-        builder->print("      ");
-
-        cout << endl << endl << "Done." << endl;
-
-        double answer = builder->solve();
-        cout << "Answer: " << answer << endl;
+        int iterations = 0;
+        while(iterations < 100){
+            builder->generate(5, 1, 2, "+-");
+            builder->print(" ");
+            cout << "Problem: " << builder->buildEquation() << " Answer: " << builder->solve() << endl;
+            iterations++;
+        }
         return a.exec();
     }
     catch(exception ex){

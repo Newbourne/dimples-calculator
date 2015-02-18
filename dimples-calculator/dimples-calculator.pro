@@ -19,15 +19,30 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 INCLUDEPATH += /usr/local/include\
+                /usr/local/include/node\
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    Generator.cpp \
+    MathNode.cpp \
+    NodeBuilder.cpp \
+    Operations.cpp \
+    init.cc \
+    Wrapper.cc
 
 LIBS += -stdlib=libc++
+
 LIBS += -L/usr/local/lib \
         -lboost_regex
 
 HEADERS += \
-    node.h \
-    operations.h \
-    nodebuilder.h \
-    generator.h
+    MathNode.h \
+    Generator.h \
+    NodeBuilder.h \
+    Operations.h \
+    Wrapper.h
+
+DISTFILES += \
+    binding.gyp \
+    dimples-calculator.js \
+    binding.gyp \
+    test.js
