@@ -1,6 +1,9 @@
 ## Dimples Calculator
 C++ / NodeJS addon for parsing and generating dynamic string algorithms and calculations.
 
+Development: Active
+Start Date: Winter 2014
+
 ### Cloud 9 - Ubuntu 14 Server - Workspace
 - Boost Libraries (v1.55) `apt-get install libboost-dev-all`
 - NPM Package Manager `apt-get install npm`
