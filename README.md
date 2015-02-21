@@ -2,6 +2,7 @@
 C++ / NodeJS addon for parsing and generating dynamic string algorithms and calculations.
 
 Development: Active 
+
 Start Date: Winter 2014
 
 ### Cloud 9 - Ubuntu 14 Server - Workspace
