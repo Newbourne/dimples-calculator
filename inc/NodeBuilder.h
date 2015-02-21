@@ -1,4 +1,4 @@
-    #ifndef NODEBUILDER_H
+#ifndef NODEBUILDER_H
 #define NODEBUILDER_H
 
 #include <string>

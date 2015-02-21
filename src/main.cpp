@@ -1,4 +1,3 @@
-#include <QCoreApplication>
 #include <string>
 #include <iostream>
 #include "NodeBuilder.h"
@@ -8,7 +7,6 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     try{
-        QCoreApplication a(argc, argv);
         NodeBuilder* builder = new NodeBuilder();
         int iterations = 0;
         while(iterations < 100){
@@ -17,7 +15,7 @@ int main(int argc, char *argv[])
             cout << "Problem: " << builder->buildEquation() << " Answer: " << builder->solve() << endl;
             iterations++;
         }
-        return a.exec();
+        return 0;
     }
     catch(exception ex){
         cout << "Exception: " <<  ex.what() << endl;
