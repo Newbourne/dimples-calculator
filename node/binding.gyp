@@ -2,9 +2,9 @@
     "targets":[
         {
             "target_name": "addon",
-            'include_dirs': [
-              '../inc',
-              '/usr/include/boost/',
+            "include_dirs": [
+              "../inc",
+              "/usr/include/boost/",
               
             ],
             "sources": [    "init.cc",
@@ -14,12 +14,12 @@
                             "../src/MathNode.cpp",
                             "../src/NodeBuilder.cpp"
                        ],
-            'libraries': [
-              '-L/usr/lib/x86_64-linux-gnu',
-              '-lboost_regex'
+            "libraries": [
+              "-L/usr/lib/x86_64-linux-gnu",
+              "-lboost_regex"
             ],
             "cflags": [
-              "-std=c++11"
+              "-std=c++0x"
             ]
         }
     ]

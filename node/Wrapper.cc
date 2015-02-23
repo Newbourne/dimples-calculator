@@ -1,5 +1,6 @@
 #include "Wrapper.h"
 #include "NodeBuilder.h"
+#include <iostream>
 
 using namespace v8;
 
@@ -68,7 +69,7 @@ void Wrapper::Solve(const FunctionCallbackInfo<Value>& args) {
 
 void Wrapper::GetProblem(const FunctionCallbackInfo<Value> &args){
     Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
+    //HandleScope scope(isolate);
 
     Wrapper* obj = ObjectWrap::Unwrap<Wrapper>(args.Holder());
 

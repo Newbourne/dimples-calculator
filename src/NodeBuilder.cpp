@@ -125,10 +125,14 @@ double NodeBuilder::solveRec(MathNode* position){
 }
 
 string NodeBuilder::getEquation(MathNode* position){
-    if(!position)
+    if(!position){
         return "";
-    if(position->getNodeType() == NodeType::Operand)
+    }
+        
+    if(position->getNodeType() == NodeType::Operand){
         return position->getText();
+    }
+    
     return getEquation(position->getLeft()) + position->getText() + getEquation(position->getRight());
 }
 

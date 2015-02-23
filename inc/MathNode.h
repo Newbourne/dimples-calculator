@@ -13,7 +13,7 @@ private:
     MathNode* left = NULL;
     MathNode* right = NULL;
     NodeType nodeType;
-    string text;
+    string text = "";
     bool isPlaceholder = false;
 public:
     MathNode(MathNode* parent, NodeType nodeType, string text);

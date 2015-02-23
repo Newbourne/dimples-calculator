@@ -10,9 +10,9 @@ int main(int argc, char *argv[])
         NodeBuilder* builder = new NodeBuilder();
         int iterations = 0;
         while(iterations < 100){
-            builder->generate(5, 1, 2, "+-");
+            builder->generate(5, 2, 2, "+-");
             builder->print(" ");
-            cout << "Problem: " << builder->buildEquation() << " Answer: " << builder->solve() << endl;
+            cout << "Problem: " << builder->buildEquation() << " Solution: " << builder->solve() << endl;
             iterations++;
         }
         return 0;
