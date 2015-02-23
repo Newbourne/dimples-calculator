@@ -6,7 +6,7 @@ Development: Active
 Start Date: Winter 2014
 
 ### Cloud 9 - Ubuntu 14 Server - Workspace
-- Setup Cloud 9 provided SSH key (/.ssh/authorized_keys
+- Setup Cloud 9 provided SSH key (/.ssh/authorized_keys)
 - Boost Libraries (v1.55) `apt-get install libboost-dev-all`
 - NPM Package Manager `apt-get install npm`
 - Node Manager `npm install n -g` then `sudo n install latest`
