@@ -1,24 +1,32 @@
 #include <string>
-#include <ostream>
 #include <boost/regex.hpp>
-#include "MathNode.h"
-#include "Operations.h"
-#include "Generator.h"
-#include "NodeBuilder.h"
+#include <boost/uuid/uuid.hpp>            // uuid class
+#include <boost/uuid/uuid_generators.hpp> // generators
+#include <boost/uuid/random_generator.hpp> // generators
+#include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
+
+#include "Situation.h"
 
 using namespace std;
 
-NodeBuilder::NodeBuilder(){
+Situation::Situation(){
     srand (time(NULL));
+    //default construct the random number generator and seed it
+    boost::uuids::random_generator gen;
+    boost::uuids::uuid u = gen();
+    this->uuid = to_string(u);
 }
 
-NodeBuilder::~NodeBuilder(){
-    if(this->root){
-        delete this->root;
-    }
+Situation::Situation(string source) : Situation(){
+    this->source = source;
 }
 
-bool NodeBuilder::operandCheck(const string check){
+Situation::~Situation(){
+    if(this->categories) delete this->categories;
+    if(this->root) delete this->root;
+}
+
+bool Situation::operandCheck(const string check){
     if(boost::regex_match(check, operandRegex)){
         return true;
     }
@@ -27,7 +35,7 @@ bool NodeBuilder::operandCheck(const string check){
     }
 }
 
-bool NodeBuilder::operatorCheck(const char check){
+bool Situation::operatorCheck(const char check){
     std::string validate;
     validate.push_back(check);
     if(boost::regex_match(validate, operatorRegex)){
@@ -38,17 +46,31 @@ bool NodeBuilder::operatorCheck(const char check){
     }
 }
 
-void NodeBuilder::traverse(MathNode* position, string padding){
-    if(!position){
-        return;
+double Situation::solve(MathNode* position){
+    double value_left = 0;
+    double value_right = 0;
+
+    if(position->getNodeType() == NodeType::Operand){
+        return atof(position->getText().c_str());
     }
-    padding = padding.append(padding);
-    traverse(position->getLeft(), padding);
-    //cout << padding << position->getText() << endl;
-    traverse(position->getRight(), padding);
+
+    if(position->getLeft()){
+        value_left = solve(position->getLeft());
+    }
+
+    if(position->getRight()){
+        value_right = solve(position->getRight());
+    }
+
+    double value = 0;
+    if(position->getText() == "+")
+        value = Operations::add(value_left, value_right);
+    else if(position->getText() == "-")
+        value = Operations::subtract(value_left, value_right);
+    return value;
 }
 
-MathNode* NodeBuilder::build(MathNode* position, MathNode* operandNode, MathNode* operatorNode){
+MathNode* Situation::buildTree(MathNode* position, MathNode* operandNode, MathNode* operatorNode){
     if(!position){
         if(!operandNode && !operatorNode){
             return new MathNode(NodeType::Operand, "0");
@@ -100,31 +122,7 @@ MathNode* NodeBuilder::build(MathNode* position, MathNode* operandNode, MathNode
     return position;
 }
 
-double NodeBuilder::solveRec(MathNode* position){
-    double value_left = 0;
-    double value_right = 0;
-
-    if(position->getNodeType() == NodeType::Operand){
-        return atof(position->getText().c_str());
-    }
-
-    if(position->getLeft()){
-        value_left = solveRec(position->getLeft());
-    }
-
-    if(position->getRight()){
-        value_right = solveRec(position->getRight());
-    }
-
-    double value = 0;
-    if(position->getText() == "+")
-        value = Operations::add(value_left, value_right);
-    else if(position->getText() == "-")
-        value = Operations::subtract(value_left, value_right);
-    return value;
-}
-
-string NodeBuilder::getEquation(MathNode* position){
+string Situation::buildEquation(MathNode* position){
     if(!position){
         return "";
     }
@@ -133,10 +131,10 @@ string NodeBuilder::getEquation(MathNode* position){
         return position->getText();
     }
     
-    return getEquation(position->getLeft()) + position->getText() + getEquation(position->getRight());
+    return buildEquation(position->getLeft()) + position->getText() + buildEquation(position->getRight());
 }
 
-void NodeBuilder::parse(string equation){
+void Situation::parse(string equation){
     this->equation = equation;
 
     string operand = "0";
@@ -154,7 +152,7 @@ void NodeBuilder::parse(string equation){
             operand.push_back(charIndex);
             if(i == (int)equation.length()-1){
                 MathNode* operandNode = new MathNode(NodeType::Operand, operand);
-                this->root = build(this->root, operandNode, nullptr);
+                this->root = buildTree(this->root, operandNode, nullptr);
             }
             else
                 continue;
@@ -169,21 +167,15 @@ void NodeBuilder::parse(string equation){
             }
             MathNode* operandNode = new MathNode(NodeType::Operand, operand);
             MathNode* operatorNode = new MathNode(NodeType::Operator, charIndex);
-            this->root = build(this->root, operandNode, operatorNode);
+            this->root = buildTree(this->root, operandNode, operatorNode);
             operand = "0";
         }
     }
+    this->equation = this->buildEquation(this->root);
+    this->solution = this->solve(this->root);
 }
 
-void NodeBuilder::print(string padding){
-    this->traverse(this->root, padding);
-}
-
-double NodeBuilder::solve(){
-    return this->solveRec(this->root);
-}
-
-void NodeBuilder::generate(int operandCount, int operandLengthMin,
+void Situation::generate(int operandCount, int operandLengthMin,
                            int operandLengthMax, string operations){
     if(this->root){
         delete this->root;
@@ -194,7 +186,7 @@ void NodeBuilder::generate(int operandCount, int operandLengthMin,
         if (i == operandCount-1){
             string operand_str = Generator::operand(operandLengthMin, operandLengthMax);
             MathNode* operandNode = new MathNode(NodeType::Operand, operand_str);
-            this->root = this->build(this->root, operandNode, nullptr);
+            this->root = this->buildTree(this->root, operandNode, nullptr);
         }
         else{
             int op_index = rand() % operations.length();
@@ -202,12 +194,29 @@ void NodeBuilder::generate(int operandCount, int operandLengthMin,
             string operand_str = Generator::operand(operandLengthMin, operandLengthMax);
             MathNode* operandNode = new MathNode(NodeType::Operand, operand_str);
             MathNode* operatorNode = new MathNode(NodeType::Operator, op);
-            this->root = this->build(this->root, operandNode, operatorNode);
+            this->root = this->buildTree(this->root, operandNode, operatorNode);
         }
     }
+    this->equation = this->buildEquation(this->root);
+    this->solution = this->solve(this->root);
 }
 
-string NodeBuilder::buildEquation(){
-    return this->getEquation(this->root);
+string* Situation::getCategories(){
+    return this->categories;
 }
 
+string Situation::getUUID(){
+    return this->uuid;
+}
+
+string Situation::getSource(){
+    return this->source;
+}
+
+string Situation::getEquation(){
+    return this->equation;
+}
+
+double Situation::getSolution(){
+    return this->solution;
+}

@@ -1,5 +1,5 @@
 #include "Wrapper.h"
-#include "NodeBuilder.h"
+#include "Situation.h"
 #include <iostream>
 
 using namespace v8;
@@ -7,7 +7,7 @@ using namespace v8;
 Persistent<Function> Wrapper::constructor;
 
 Wrapper::Wrapper(){
-    this->nodeBuilder = new NodeBuilder();
+    this->situation = new Situation();
 }
 
 Wrapper::~Wrapper() {
@@ -57,8 +57,11 @@ void Wrapper::Solve(const FunctionCallbackInfo<Value>& args) {
 
   String::Utf8Value param1(args[0]->ToString());
   std::string eq = std::string(*param1);
-  obj->nodeBuilder->parse(eq);
-  double solution = obj->nodeBuilder->solve();
+  obj->situation->parse(eq);
+  std::string equation = obj->situation->getEquation();
+  double solution = obj->situation->getSolution();
+  std::string source = obj->situation->getSource();
+  //std::string* categories = obj->situation->getCategories();
 
   Local<Object> newObj = Object::New(isolate);
   newObj->Set(String::NewFromUtf8(isolate, "problem"), args[0]->ToString());
@@ -80,12 +83,14 @@ void Wrapper::GetProblem(const FunctionCallbackInfo<Value> &args){
     int operandLengthMax = args[2]->NumberValue();
     std::string operations = std::string(*param1);
 
-    obj->nodeBuilder->generate(operandCount, operandLengthMin, operandLengthMax, operations);
-    std::string eq = obj->nodeBuilder->buildEquation();
-    double solution = obj->nodeBuilder->solve();
+    obj->situation->generate(operandCount, operandLengthMin, operandLengthMax, operations);
+    std::string equation = obj->situation->getEquation();
+    double solution = obj->situation->getSolution();
+    std::string source = obj->situation->getSource();
+    //std::string* categories = obj->situation->getCategories();
 
     Local<Object> newObj = Object::New(isolate);
-    newObj->Set(String::NewFromUtf8(isolate, "problem"), String::NewFromUtf8(isolate, eq.c_str()));
+    newObj->Set(String::NewFromUtf8(isolate, "problem"), String::NewFromUtf8(isolate, equation.c_str()));
     newObj->Set(String::NewFromUtf8(isolate, "solution"), String::NewFromUtf8(isolate, std::to_string(solution).c_str()));
 
     args.GetReturnValue().Set(newObj);

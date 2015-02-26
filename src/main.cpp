@@ -1,18 +1,22 @@
 #include <string>
 #include <iostream>
-#include "NodeBuilder.h"
+#include "Situation.h"
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
     try{
-        NodeBuilder* builder = new NodeBuilder();
+        Situation* sit = new Situation("default-generator");
         int iterations = 0;
         while(iterations < 100){
-            builder->generate(5, 2, 2, "+-");
-            builder->print(" ");
-            cout << "Problem: " << builder->buildEquation() << " Solution: " << builder->solve() << endl;
+            sit->generate(5, 2, 2, "+-");
+            cout << "Problem: " 
+                 << sit->getEquation() 
+                 << " Solution: " 
+                 << sit->getSolution()
+                 << endl;
+                 
             iterations++;
         }
         return 0;

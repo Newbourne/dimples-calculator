@@ -1,4 +1,4 @@
-APP      = NodeBuilder
+APP      = Generator
 
 SRCEXT   = cpp
 SRCDIR   = src
@@ -13,7 +13,7 @@ DEBUG    = -g
 INCLUDES = -I./inc
 INCLUDES += -I/usr/include/boost/
 LIBS 	 = -L/usr/lib/x86_64-linux-gnu -lboost_regex
-CFLAGS   = -c -std=c++0x
+CFLAGS   = -c -std=c++0x -fexceptions
 CFLAGS   += -Wall $(DEBUG) $(INCLUDES)
 LDFLAGS  =
 

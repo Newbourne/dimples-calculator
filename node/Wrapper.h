@@ -3,7 +3,7 @@
 
 #include <node.h>
 #include <node_object_wrap.h>
-#include "NodeBuilder.h"
+#include "Situation.h"
 
 using namespace v8;
 
@@ -15,7 +15,7 @@ class Wrapper : public node::ObjectWrap {
   explicit Wrapper();
   ~Wrapper();
 
-  NodeBuilder* nodeBuilder;
+  Situation* situation;
   static Persistent<Function> constructor;
   static void New(const FunctionCallbackInfo<Value>& args);
   static void GetProblem(const FunctionCallbackInfo<Value>& args);
