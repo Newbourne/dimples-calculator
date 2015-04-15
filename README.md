@@ -21,7 +21,9 @@ Binary will be located in \bin
 
 #### Compile Addon
 `cd node`
+
 (run once) `node-gyp configure`
+
 `node-gyp build`
 
 #### Execute Node Test
