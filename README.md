@@ -5,6 +5,9 @@ Development: Active
 
 Start Date: Winter 2014
 
+### Algorithm
+The algorithm used to generate the problem takes in a few parameters and builds a tree which we then traverse and build the string for the problem. Instead of parsing the string problem to find the solution we traverse the tree once more and recursively determine the solution. The tree is beneficial because it can provide a visual representation of how to solve the problem. For the moment we are capturing the problem and the solution, but later we could capture the tree structure and represent that in HTML.
+
 ### Cloud 9 - Ubuntu 14 Server - Workspace
 - Setup Cloud 9 provided SSH key (/.ssh/authorized_keys)
 - Install NVM and latest version of Node.JS
